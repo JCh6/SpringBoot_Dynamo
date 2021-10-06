@@ -31,15 +31,18 @@ public class DynamoDBConfiguration {
     }
 
     private AmazonDynamoDB buildAmazonDynamoDB() {
-        var endpointConfiguration = new AwsClientBuilder.EndpointConfiguration(serviceEndpoint, signingRegion);
-
-        var awsStaticCredentialsProvider =
-                new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKey, secretKey));
-
         return AmazonDynamoDBClientBuilder
                 .standard()
-                .withEndpointConfiguration(endpointConfiguration)
-                .withCredentials(awsStaticCredentialsProvider).build();
+                .withEndpointConfiguration(getEndpointConfiguration())
+                .withCredentials(getStaticCredentialsProvider()).build();
+    }
+
+    private AwsClientBuilder.EndpointConfiguration getEndpointConfiguration() {
+        return new AwsClientBuilder.EndpointConfiguration(serviceEndpoint, signingRegion);
+    }
+
+    private AWSStaticCredentialsProvider getStaticCredentialsProvider() {
+        return new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKey, secretKey));
     }
 
 }
